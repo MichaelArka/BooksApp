@@ -13,7 +13,7 @@
       booksList: '.books-list',
     },
     image: {
-      bookImage: '.book-image',
+      bookImage: '.book__image',
     },
     filters: '.filters',
   };
@@ -44,6 +44,7 @@
       this.DOM.bookContainer = document.querySelector(select.containerOf.booksList);
       this.options.filters = [];
       this.DOM.filtersForm = document.querySelector(select.filters);
+      this.DOM.booksImage = document.querySelector(select.image.bookImage);
     }
 
     render(){
@@ -88,8 +89,31 @@
 
             thisBook.options.filters.splice(thisBook.options.filters.indexOf(element.value), 1);
           }
+          thisBook.filterBooks();
         }
       });
+    }
+
+    filterBooks(){
+      const thisBook = this;
+      const booksList = document.querySelector('.books-list');
+
+      for(const book of this.data){
+        let shouldBeHidden = false;
+        for(const filter of thisBook.options.filters){
+          if(!book.details[filter] === false){
+            shouldBeHidden = true;
+            break;
+          }
+        }
+        const booksImage = booksList.querySelector('.book__image[data-id="' + book.id + '"]');
+        if(shouldBeHidden === true){
+          booksImage.classList.add('hidden');
+        }
+        if(shouldBeHidden === false){
+          booksImage.classList.remove('hidden');
+        }
+      }
     }
   }
   new Books();
