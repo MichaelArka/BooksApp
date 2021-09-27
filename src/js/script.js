@@ -13,9 +13,10 @@
       booksList: '.books-list',
     },
     image: {
-      bookImage: '.book__image',
+      bookImage: 'book__image',
     },
     filters: '.filters',
+    rating: '__rating'
   };
 
   const templates = {
@@ -27,7 +28,7 @@
 
       this.initData();
       this.getElements();
-      this.render();
+      this.render(this.data);
       this.initActions();
     }
 
@@ -50,8 +51,10 @@
     render(){
       const thisBook = this;
 
-      for(const books of dataSource.books){
-        const generatedHTML = templates.bookTemplate(books);
+      for(const book of dataSource.books){
+        book.ratingBgc = thisBook.determineRatingBgc(book.rating);
+        book.ratingWidth = book.rating * 10;
+        const generatedHTML = templates.bookTemplate(book);
         thisBook.element = utils.createDOMFromHTML(generatedHTML);
         const bookContainer = document.querySelector(select.containerOf.booksList);
         bookContainer.appendChild(thisBook.element);
@@ -61,7 +64,7 @@
     initActions(){
       const thisBook = this;
 
-      this.DOM.bookContainer.addEventListener('dbclick', function(event){
+      this.DOM.bookContainer.addEventListener('dblclick', function(event){
         event.preventDefault;
         const element = event.target.offsetParent;
 
@@ -84,11 +87,10 @@
 
           if(element.checked){
             thisBook.options.filters.push(element.value);
-
-          }else{
-
+          } else {
             thisBook.options.filters.splice(thisBook.options.filters.indexOf(element.value), 1);
           }
+
           thisBook.filterBooks();
         }
       });
@@ -114,6 +116,21 @@
           booksImage.classList.remove('hidden');
         }
       }
+    }
+
+    determineRatingBgc(rating){
+      let ratingBackground = document.querySelector(select.rating);
+
+      if(rating < 6){
+        ratingBackground = 'linear-gradient(to bottom, #fefcea 0%, #f1da36 100%)';
+      } else if (rating > 6 && rating <= 8){
+        ratingBackground = 'linear-gradient(to bottom, #b4df5b 0%,#b4df5b 100%);';
+      } else if (rating > 8 && rating <= 9){
+        ratingBackground = 'linear-gradient(to bottom, #299a0b 0%, #299a0b 100%)';
+      } else if (rating > 9){
+        ratingBackground = 'linear-gradient(to bottom, #ff0084 0%,#ff0084 100%)';
+      }
+      return ratingBackground;
     }
   }
   new Books();
