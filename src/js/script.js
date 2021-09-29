@@ -5,7 +5,6 @@
   'use strict';
 
   const select = {
-
     templateOf: {
       bookTemplate: '#template-book',
     },
@@ -33,7 +32,6 @@
     }
 
     initData(){
-
       this.data = dataSource.books;
     }
 
@@ -98,7 +96,7 @@
 
     filterBooks(){
       const thisBook = this;
-      const booksList = document.querySelector('.books-list');
+      const booksList = document.querySelector(select.containerOf.booksList);
 
       for(const book of this.data){
         let shouldBeHidden = false;
